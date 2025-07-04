@@ -6,9 +6,11 @@ import org.example.buckpal.application.port.in.SendMoneyCommand;
 import org.example.buckpal.application.port.in.SendMoneyUseCase;
 import org.example.buckpal.application.port.out.UpdateAccountStatePort;
 import org.example.buckpal.domain.AccountId;
+import org.springframework.stereotype.Service;
 
 
 @RequiredArgsConstructor
+@Service
 public class SendMoneyService implements SendMoneyUseCase {
 
     private final UpdateAccountStatePort updateAccountStatePort;

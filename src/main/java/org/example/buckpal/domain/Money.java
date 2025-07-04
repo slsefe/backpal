@@ -13,6 +13,10 @@ import java.math.BigDecimal;
 public class Money {
     private BigDecimal amount;
 
+    public static Money of(Long amount) {
+        return new Money(BigDecimal.valueOf(amount));
+    }
+
     public static Money add(Money money1, Money money2) {
         return new Money(money1.amount.add(money2.amount));
     }

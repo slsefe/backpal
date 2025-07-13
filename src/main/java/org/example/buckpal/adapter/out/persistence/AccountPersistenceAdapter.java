@@ -23,8 +23,6 @@ public class AccountPersistenceAdapter implements LoadAccountPort, UpdateAccount
     private final AccountRepository accountRepository;
     
     private final ActivityRepository activityRepository;
-
-    private final AccountMapper accountMapper;
     
     @Override
     public Account loadAccount(AccountId accountId, LocalDateTime since) {
@@ -36,7 +34,7 @@ public class AccountPersistenceAdapter implements LoadAccountPort, UpdateAccount
 
         Long depositBalance = activityRepository.getDepositBalanceUntil(account.getId(), since);
 
-        return accountMapper.mapToDomainEntity(account, activities, withdrawalBalance, depositBalance);
+        return AccountMapper.INSTANCE.mapToDomainEntity(account, activities, withdrawalBalance, depositBalance);
 
     }
 
@@ -44,7 +42,7 @@ public class AccountPersistenceAdapter implements LoadAccountPort, UpdateAccount
     public void updateActivities(Account account) {
         for (Activity activity : account.getActivityWindow().getActivities()) {
             if (activity.getAccountId() == null) {
-                activityRepository.save(accountMapper.mapToJpaEntity(activity));
+                activityRepository.save(AccountMapper.INSTANCE.mapToJpaEntity(activity));
             }
         }
 

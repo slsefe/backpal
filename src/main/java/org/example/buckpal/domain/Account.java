@@ -1,12 +1,14 @@
 package org.example.buckpal.domain;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Getter
-@RequiredArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Account {
 
     private final AccountId id;
@@ -18,6 +20,18 @@ public class Account {
 
     public Money calculateBalance() {
         return Money.add(this.baselineBalance, this.activityWindow.calculateBalance(this.id));
+    }
+
+    public static Account withoutId(Money baselineBalance, ActivityWindow activityWindow) {
+        return new Account(null, baselineBalance, activityWindow);
+    }
+
+    public static Account withId(AccountId accountId, Money baselineBalance, ActivityWindow activityWindow) {
+        return new Account(accountId, baselineBalance, activityWindow);
+    }
+
+    public Optional<AccountId> getId() {
+        return Optional.ofNullable(id);
     }
 
     public boolean withdraw(Money money, AccountId targetAccountId) {

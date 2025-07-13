@@ -176,17 +176,18 @@ Account、Activity
 #### input validate vs business rule validate
 
 如何区分 input validate 和 business rule validate？
+
 - 对 business rule 进行 validate需要获取当前 domain 模型的 state，而 input validate 不需要。
 - input validate 可以使用声明式的注解，而 business rule 需要更多的上下文
 - input validate 是句法校验，而 business rule 是在当前 usecase 上下文的语义校验
 
-- 对于转账这个 usecase 来说：
+对于转账这个 usecase 来说：
 - 原账户必须存在、目标账户必须存在，转账金额必须大于 0 属于 input validate
 - 账户不能透支（转账金额必须小于原账户当前余额）属于业务规则校验
 
-- 业务规则校验在哪里实现？最好是放在 domain 实体中，次之放在 usecase 的实现逻辑中。
+业务规则校验在哪里实现？最好是放在 domain 实体中，次之放在 usecase 的实现逻辑中。
 
-- #### 充血模型 vs 贫血模型
+#### 充血模型 vs 贫血模型
 
 对于充血模型，在实体中实现尽可能多的业务逻辑，比如 Account 实体。对于充血模型，usecase 扮演的是对于领域模型的入口点的角色。
 
@@ -194,8 +195,6 @@ Account、Activity
 
 对于六边形架构来说，两种实现方式都可以。
 
-为不同的 usecase 选择不同的 output model
-实现只读 usecase
 ### 实现一个 web adapter
 
 作用：接受外部请求，转化为对应用核心层的调用
@@ -207,6 +206,7 @@ Account、Activity
 - application.service：实现接口
 
 web adapter 的职责
+
 - 将 HTTP request 转换为 java 对象
 - 鉴权
 - 输入校验（这里指的是 web adapter 的 input model，而非 usecase 的 input model）
@@ -215,7 +215,7 @@ web adapter 的职责
 - 将 usecase 的返回值转换为 HTTP response
 - 返回 HTTP response
 
-- ### 实现持久层 adapter
+### 实现持久层 adapter
 
 ![img.png](resources/img12.png)
 

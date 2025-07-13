@@ -4,20 +4,23 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.example.buckpal.domain.AccountId;
-import org.example.buckpal.domain.Money;
+
+import java.math.BigDecimal;
 
 @Getter
 @RequiredArgsConstructor
 public class SendMoneyCommand {
 
     @NotNull
-    private final AccountId sourceAccountId;
+    private final Long userId;
 
     @NotNull
-    private final AccountId targetAccountId;
+    private final Long sourceAccountId;
+
+    @NotNull
+    private final Long targetAccountId;
 
     @NotNull
     @Positive
-    private final Money money;
+    private final BigDecimal money;
 }

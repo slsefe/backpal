@@ -9,42 +9,35 @@ import org.example.buckpal.adapter.out.persistence.repository.ActivityRepository
 import org.example.buckpal.application.port.out.LoadAccountPort;
 import org.example.buckpal.application.port.out.UpdateAccountStatePort;
 import org.example.buckpal.domain.Account;
-import org.example.buckpal.domain.AccountId;
 import org.example.buckpal.domain.Activity;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
 @RequiredArgsConstructor
 public class AccountPersistenceAdapter implements LoadAccountPort, UpdateAccountStatePort {
-    
+
     private final AccountRepository accountRepository;
-    
+
     private final ActivityRepository activityRepository;
-    
+
+    private final AccountMapper accountMapper;
+
     @Override
-    public Account loadAccount(AccountId accountId, LocalDateTime since) {
-        AccountJpaEntity account = accountRepository.findById(accountId.getId()).orElseThrow(RuntimeException::new);
+    public Account loadAccount(Long accountId) {
+        AccountJpaEntity account = accountRepository.findById(accountId).orElseThrow(RuntimeException::new);
 
-        List<ActivityJpaEntity> activities = activityRepository.findByOwnerSince(account.getId(), since);
+        List<ActivityJpaEntity> activities = activityRepository.findByOwnerSince(accountId);
 
-        Long withdrawalBalance = activityRepository.getWithdrawalBalanceUntil(account.getId(), since);
-
-        Long depositBalance = activityRepository.getDepositBalanceUntil(account.getId(), since);
-
-        return AccountMapper.INSTANCE.mapToDomainEntity(account, activities, withdrawalBalance, depositBalance);
-
+        return accountMapper.mapToDomainEntity(account, activities);
     }
 
     @Override
     public void updateActivities(Account account) {
-        for (Activity activity : account.getActivityWindow().getActivities()) {
-            if (activity.getAccountId() == null) {
-                activityRepository.save(AccountMapper.INSTANCE.mapToJpaEntity(activity));
-            }
-        }
-
+        List<Activity> activities = account.getActivityWindow().getActivities().stream()
+                .filter(activity -> activity.getId() == null)
+                .toList();
+        activityRepository.saveAll(accountMapper.mapToActivityJpaEntity(activities));
     }
 }

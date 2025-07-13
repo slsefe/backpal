@@ -12,8 +12,8 @@ import java.util.List;
 @Repository
 public interface ActivityRepository extends JpaRepository<ActivityJpaEntity, Long> {
 
-    @Query("select a from ActivityJpaEntity a where a.ownerAccountId = :ownerAccountId and a.timestamp >= :since")
-    List<ActivityJpaEntity> findByOwnerSince(@Param("ownerAccountId") Long ownerAccountId, @Param("since")LocalDateTime since);
+    @Query("select a from ActivityJpaEntity a where a.ownerAccountId = :ownerAccountId")
+    List<ActivityJpaEntity> findByOwnerSince(@Param("ownerAccountId") Long ownerAccountId);
 
     @Query("select sum(a.amount) from ActivityJpaEntity a " +
             "where a.ownerAccountId = : accoundId " +

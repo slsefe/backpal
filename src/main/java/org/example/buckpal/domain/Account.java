@@ -11,35 +11,33 @@ import java.util.Optional;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Account {
 
-    private final AccountId id;
+    private final Long id;
 
-    private final Money baselineBalance;
-
-    // a last few days of activities
     private final ActivityWindow activityWindow;
 
     public Money calculateBalance() {
-        return Money.add(this.baselineBalance, this.activityWindow.calculateBalance(this.id));
+        return this.activityWindow.calculateBalance(this.id);
     }
 
-    public static Account withoutId(Money baselineBalance, ActivityWindow activityWindow) {
-        return new Account(null, baselineBalance, activityWindow);
+    public static Account withoutId(ActivityWindow activityWindow) {
+        return new Account(null, activityWindow);
     }
 
-    public static Account withId(AccountId accountId, Money baselineBalance, ActivityWindow activityWindow) {
-        return new Account(accountId, baselineBalance, activityWindow);
+    public static Account withId(Long accountId, ActivityWindow activityWindow) {
+        return new Account(accountId, activityWindow);
     }
 
-    public Optional<AccountId> getId() {
+    public Optional<Long> getId() {
         return Optional.ofNullable(id);
     }
 
-    public boolean withdraw(Money money, AccountId targetAccountId) {
+    public boolean withdraw(Money money, Long targetAccountId) {
         if (!mayWithDraw(money)) {
             return false;
         }
-        Activity withdrawal = new Activity(this.id, this.id, targetAccountId, LocalDateTime.now(), money);
-        this.activityWindow.addActivity(withdrawal);
+        // add activity for account
+        Activity activity = new Activity(null, this.id, this.id, targetAccountId, LocalDateTime.now(), money);
+        this.activityWindow.addActivity(activity);
         return true;
     }
 
@@ -47,9 +45,11 @@ public class Account {
         return Money.add(this.calculateBalance(), money.negate()).isPositive();
     }
 
-    public boolean deposit(Money money, AccountId sourceAccountId) {
-        Activity deposit = new Activity(this.id, sourceAccountId, this.id, LocalDateTime.now(), money);
+    public boolean deposit(Money money, Long sourceAccountId) {
+        // add activity for account
+        Activity deposit = new Activity(null, this.id, sourceAccountId, this.id, LocalDateTime.now(), money);
         this.activityWindow.addActivity(deposit);
         return true;
     }
+
 }

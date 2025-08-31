@@ -81,9 +81,9 @@ Single Responsibility Principle：一个组件应该只做一件事。
 
 ![img.png](resources/img6.png)
 
-如何解决这个问题？依赖倒置原则。
+如何解决这个问题？**依赖倒置原则**
 
-如何实现？将 entity 移动到 domain 层，在 domain 层引入 repository 的接口，persistence 层实现 domain 层定义的 repository 的接口。
+如何实现？**将 entity 移动到 domain 层，在 domain 层引入 repository 的接口，persistence 层实现 domain 层定义的 repository 的接口。**
 
 ![img.png](resources/img7.png)
 
@@ -100,13 +100,15 @@ clean 架构的概念来自于《clena architecture》一书。
 
 ![img.png](resources/img8.png)
 
-核心：外层组件依赖内层组件。
+核心：**外层组件依赖内层组件**。
 
 entity 是实体类，use cases 是分层架构中的 services，但是这里的 usecase 需要遵循单一职责原则。
 
 缺点：因为 domain 层与外层（持久化、UI）完全解耦，需要在每一层维护一个 entity 模型。
 
 ### 六边形架构
+
+六边形架构是对clean架构的一种实现。
 
 ![img.png](resources/img9.png)
 
@@ -122,7 +124,7 @@ entity 是实体类，use cases 是分层架构中的 services，但是这里的
 
 #### 包组织方式
 
-原则：包的组织方式要能反映软件架构。
+原则：**包的组织方式要能反映软件架构**。
 
 在外层还是以 feature 组织包结构，在 feature 内部以六边形架构来组织包结构。
 - domain：领域模型 Account 和 Activity
